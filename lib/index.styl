@@ -1,41 +1,128 @@
 
+$color = rgba(0,14,4, 0.74)
+
+body
 html
-  padding 40px
+.ace_editor.ace-clouds
   margin 0
+  font 12px/1.5 'Monaco', 'Menlo', monospace
+  color $color
+
+
+section
+  box-sizing border-box
+  padding-bottom 60px
+  padding-left 7%
+  padding-right @padding-left
+  &:nth-child(2n)
+    background rgba(0,1,16, 0.004)
+  &:nth-child(2)
+    padding-top @padding-bottom
+
+section.variables
+  p
+    margin 0
+
+h1, h2
+  cursor default
+  margin 30px
+
+h1
+  font-size 48px
+
+h2
+  font-size 30px
+
+hr
+  position relative
+  left -50%
+  margin-bottom 60px
+  margin-top 0
+  border 0
+  border-top 1px solid rgba(0,0,0, 0.06)
+  border-bottom 1px solid rgba(244,254,255, 0.98)
+  width 200%
 
 body
   margin 0
 
 .def
 .example
-  position relative
-  height 200px
   width 100%
-  top 0
+  display inline-flex
 
-[id$="stylus"].stylus
-[id$="markup"].markup
-  position relative
-  top 0
-  right 0px
-  width 25%
-  height 200px
+.example
+  flex-flow row
+  border-top 1px solid rgba(0,14,18, 0.09)
 
-.variables
-  overflow hidden
-  height 50px
-div.ace_editor
+.example .editors
+.example .summary
+.example iframe
+  padding 30px
+  border-left 1px solid rgba(0,30,4, 0.04)
+  &:first-child
+    border-left none
+
+.def
+  flex-flow column
+
+.defs
+  padding-top 60px
+
+.defs-package
+.variables .defs
+.defs-links
+  padding-top 0
+  margin 30px
+
+.defs-links
+  list-style none
+  padding-left 0
+  a
+    text-decoration none
+    color $color
+
+.summary
   width 25%
-div.ace-chrome .ace_gutter
+
+.summary p:first-child
+  margin-top 0
+  padding-top 0
+
+.summary strong
+  color black !important
+
+.editors
+  flex-flow column
+  width 25%
+
+  .stylus
+  .markup
+    min-height 50px
+    overflow-y visible
+
+    &:first-child
+      padding-bottom 60px
+
+iframe
+  border 0
+  order 1
+  flex 1 1 auto
+  width 50%
+  resize both
+  cursor default
+
+.ace-clouds
+  background-color transparent!important
+
+div.ace-chrome
+  background transparent
+
+div.ace-chrome.ace_gutter
   background transparent
   color transparent
 div.ace_gutter-cell
-  right 5px
   position relative
-  border-right 1px solid #ccc
+
 span.ace_fold-widget
   display none
-
-iframe
-  resize both
-  //   minwidth 50%

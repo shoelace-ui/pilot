@@ -1,51 +1,73 @@
 #!/usr/bin/env node
 
-var program = require('commander');
-var lib = require('..');
-var read = require('fs').readFileSync;
 var fs = require('fs');
+var program = require('commander');
 var jade = require('jade').renderFile.bind(null, __dirname + '/../lib/index.jade');
+var markdown = require('github-flavored-markdown').parse;
+var pkg = require(process.cwd() + '/package.json');
+
+var lib = require('..');
 
 // cli
 program
   .version(require('../package.json').version)
   .option('-o, --out [path]', 'optional path to write')
-
-program.parse(process.argv);
+  .parse(process.argv);
 
 var arg = program.args[0];
 
-var raw = read(arg, 'utf8');
-
-var parsed = lib.parseComments(raw);
-
+var raw = fs.readFileSync(arg, 'utf8');
+var parsed = lib.parseComments(raw, {raw: true});
 var public = parsed.filter(function(p){ return p })
-var exvars = public.filter(function(p){ return p.ctx && p.ctx.type === 'exposed variable'});
-var exvarsCode = exvars.map(function(exv){ return {name: exv.ctx.receiver, value: exv.ctx.value, examples: [
-  {
-   stylus: 'h1\n\tbackground ' + exv.ctx.receiver,
-   markup: 'h1 ' + exv.ctx.name
-  }
-]}});
 
-var fns = public.filter(function(p){ return p.ctx && p.ctx.type === 'exposed function'});
-var fnsCode = fns.map(function(f){ return {name: f.ctx.receiver, value: f.ctx.value, examples: [
-  {
-   stylus: 'h1\n  +' + f.ctx.receiver + '(\'desktop\')\n    background-color green',
-   markup: 'h1 ' + f.ctx.name
-  }
-]}});
+var vars = public
+  .filter(function(p){ return p.ctx && p.ctx.type === 'public variable'})
+  .map(function(v){
+    var out = {
+      name: v.ctx.name,
+      value: v.ctx.value,
+      examples: []
+    };
+    return out;
+  });
+
+var fns = public
+  .filter(function(p){ return p.ctx && p.ctx.type === 'public function'})
+  .map(function(fn){
+    var md = markdown(fn.description.summary);
+    var args = markdown(fn.ctx.string);
+    var out = {
+      name: fn.ctx.name,
+      string: args,
+      value: fn.ctx.value,
+      examples: fn.examples,
+      summary: md,
+      tags: fn.tags
+    };
+    return out;
+  });
+
+var defaults = [
+    'html'
+  , 'body'
+  , '  font-family "Monaco", "Menlo", monospace',
+  , '  font-size 12px'
+  , '  color rgba(0,49,3, 0.9)'
+  , '  margin 0'
+  , ''
+].join('\n');
 
 var locals = {
-  preload: raw,
+  preload: defaults + raw,
+  pkg: pkg,
   sections: [
     {
       name: 'variables',
-      defs: exvarsCode
+      defs: vars
     },
     {
       name: 'functions',
-      defs: fnsCode
+      defs: fns
     }
   ]
 };

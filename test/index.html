@@ -1,75 +1,161 @@
-<!DOCTYPE html><html><head><style>html {
-  padding: 40px;
+<!DOCTYPE html><html><head><style>body,
+html,
+.ace_editor.ace-clouds {
   margin: 0;
+  font: 12px/1.5 'Monaco', 'Menlo', monospace;
+  color: rgba(0,14,4,0.74);
+}
+section {
+  box-sizing: border-box;
+  padding-bottom: 60px;
+  padding-left: 7%;
+  padding-right: 7%;
+}
+section:nth-child(2n) {
+  background: rgba(0,1,16,0.004);
+}
+section:nth-child(2) {
+  padding-top: 60px;
+}
+section.variables p {
+  margin: 0;
+}
+h1,
+h2 {
+  cursor: default;
+  margin: 30px;
+}
+h1 {
+  font-size: 48px;
+}
+h2 {
+  font-size: 30px;
+}
+hr {
+  position: relative;
+  left: -50%;
+  margin-bottom: 60px;
+  margin-top: 0;
+  border: 0;
+  border-top: 1px solid rgba(0,0,0,0.06);
+  border-bottom: 1px solid rgba(244,254,255,0.98);
+  width: 200%;
 }
 body {
   margin: 0;
 }
 .def,
 .example {
-  position: relative;
-  height: 200px;
   width: 100%;
-  top: 0;
+  display: inline-flex;
 }
-[id$="stylus"].stylus,
-[id$="markup"].markup {
-  position: relative;
-  top: 0;
-  right: 0px;
+.example {
+  flex-flow: row;
+  border-top: 1px solid rgba(0,14,18,0.09);
+}
+.example .editors,
+.example .summary,
+.example iframe {
+  padding: 30px;
+  border-left: 1px solid rgba(0,30,4,0.04);
+}
+.example .editors:first-child,
+.example .summary:first-child,
+.example iframe:first-child {
+  border-left: none;
+}
+.def {
+  flex-flow: column;
+}
+.defs {
+  padding-top: 60px;
+}
+.defs-package,
+.variables .defs,
+.defs-links {
+  padding-top: 0;
+  margin: 30px;
+}
+.defs-links {
+  list-style: none;
+  padding-left: 0;
+}
+.defs-links a {
+  text-decoration: none;
+  color: rgba(0,14,4,0.74);
+}
+.summary {
   width: 25%;
-  height: 200px;
 }
-.variables {
-  overflow: hidden;
-  height: 50px;
+.summary p:first-child {
+  margin-top: 0;
+  padding-top: 0;
 }
-div.ace_editor {
+.summary strong {
+  color: #000 !important;
+}
+.editors {
+  flex-flow: column;
   width: 25%;
 }
-div.ace-chrome .ace_gutter {
+.editors .stylus,
+.editors .markup {
+  min-height: 50px;
+  overflow-y: visible;
+}
+.editors .stylus:first-child,
+.editors .markup:first-child {
+  padding-bottom: 60px;
+}
+iframe {
+  border: 0;
+  order: 1;
+  flex: 1 1 auto;
+  width: 50%;
+  resize: both;
+  cursor: default;
+}
+.ace-clouds {
+  background-color: transparent !important;
+}
+div.ace-chrome {
+  background: transparent;
+}
+div.ace-chrome.ace_gutter {
   background: transparent;
   color: transparent;
 }
 div.ace_gutter-cell {
-  right: 5px;
   position: relative;
-  border-right: 1px solid #ccc;
 }
 span.ace_fold-widget {
   display: none;
 }
-iframe {
-  resize: both;
-}
-</style><script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.1.3/ace.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/jade/1.3.0/jade.min.js"></script><script src="http://learnboost.github.io/stylus/try/stylus.min.js"></script></head><body><!-- - var preload = 'html\n\tfont-family Arial';--><!-- - var sections = [{name: 'foo', stylus: 'h1\n\tbackground red', markup: 'h1 hello there'}];--><!-- - sections.push({name: 'bar', stylus: 'p\n\tcolor blue', markup: 'p look here'});--><main data-preload="
-/*!
- * media-queries
- */
+</style><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.1.3/ace.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/jade/1.3.0/jade.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.1.3/keybinding-vim.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.1.3/theme-github.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.1.3/theme-clouds.js"></script><script src="http://learnboost.github.io/stylus/try/stylus.min.js"></script></head><body><main data-preload="html
+body
+  font-family &quot;Monaco&quot;, &quot;Menlo&quot;, monospace
 
-/**
- * Library version.
- */
-
-media-queries--version = '0.0.3'
-
-/**
- * Create hash to contain sizes.
- */
-
-media-queries--sizes = {}
+  font-size 12px
+  color rgba(0,49,3, 0.9)
+  margin 0
 
 /**
  * Define default devices.
  */
 
-media-queries--devices = 'palm' 'phone' 'tablet' 'laptop' 'desktop' 'large-desktop'
+media-queries--devices = 'palm' 'phone' 'tablet' 'laptop' 'desktop' 'wide'
 
 /**
  * Define default unit of measurement for `sizes`.
  */
 
 media-queries--unit = 240
+
+/**
+ * Hash to hold our queries.
+ */
+
+--sizes = {}
 
 /**
  * Generate `devices` with the given `size`.
@@ -84,38 +170,43 @@ media-queries--unit = 240
   for name, i in devices
     low = (i*size)px
     high = (((i+1)*size) - 1)px
-    media-queries--sizes[name] = (low high)
+    --sizes[name] = (low high)
 
 /**
  * Generate default device sizes if not already present.
  * @api private
  */
 
-if not (length(media-queries--sizes))
+if not (length(--sizes))
   --calculate(media-queries--devices, media-queries--unit)
 
 /**
  * Generate a query for screens above a given `size`.
  *
- * ## Examples:
+ * Example:
  *
- *     +screen-size-above('tablet')
- *       .above-keyword
- *         color green
+ *   ```stylus
+ *   +screen-size-above('tablet')
+ *     .above-keyword
+ *       color green
+ *   +screen-size-above(500px)
+ *     .above-size
+ *       color green
+ *   ```
  *
- *     +screen-size-above(500px)
- *       .above-size
- *         color green
+ *   ```jade
+ *   .above-keyword .above-keyword
+ *   .above-size .above-size
+ *   ```
  *
  * @param {Unit} size
  * @return {Block}
- * @see --media-queries--calculate
  * @type {Mixin}
  * @api public
  */
 
 screen-size-above(size)
-  sz = size in media-queries--sizes ? media-queries--sizes[size][1] : size
+  sz = size in --sizes ? --sizes[size][1] : size
   condition = 'screen and (min-width: %s)' % sz
   @media condition
     {block}
@@ -125,28 +216,28 @@ screen-size-above(size)
  *
  * Example:
  *
- * ```stylus
- * +screen-size-below('large-desktop')
- *   .below-keyword
- *     color green
- * +screen-size-below(1000px)
- *   .below-size
- *     color green
- * ```
+ *   ```stylus
+ *   +screen-size-below('wide')
+ *     .below-keyword
+ *       color green
+ *   +screen-size-below(1000px)
+ *     .below-size
+ *       color green
+ *   ```
  *
- * ```jade
- * .below-keyword below keyword
- * .below-size below size
- * ```
+ *   ```jade
+ *   .below-keyword .below-keyword
+ *   .below-size .below-size
+ *   ```
  *
  * @param {Unit} size
  * @return {Block}
- * @see --media-queries--calculate
+ * @type {Mixin}
  * @api public
  */
 
 screen-size-below(size)
-  sz = size in media-queries--sizes ? media-queries--sizes[size][0] : size
+  sz = size in --sizes ? --sizes[size][0] : size
   condition = 'screen and (max-width: %s)' % sz
   @media condition
     {block}
@@ -154,34 +245,42 @@ screen-size-below(size)
 /**
  * Generate a query for screens between `low` and `high`.
  *
- * ## Examples:
+ * Example:
  *
- *     +screen-size-between(500, 1000px)
- *       .between-size-size
- *         color green
+ *   ```stylus
+ *   +screen-size-between(500, 1000px)
+ *     .between-size-size
+ *       color green
  *
- *     +screen-size-between('tablet', 'laptop')
- *       .between-keyword-keyword
- *         color green
+ *   +screen-size-between('tablet', 'laptop')
+ *     .between-keyword-keyword
+ *       color green
  *
- *     +screen-size-between('tablet', 1500px)
- *       .between-keyword-size
- *         color green
+ *   +screen-size-between('tablet', 1500px)
+ *     .between-keyword-size
+ *       color green
  *
- *     +screen-size-between(500px, 'laptop')
- *       .between-size-keyword
- *         color green
+ *   +screen-size-between(500px, 'laptop')
+ *     .between-size-keyword
+ *       color green
+ *   ```
+ *
+ *   ```jade
+ *   .between-size-size .between-size-size
+ *   .between-keyboard-keyboard .between-keyboard-keyboard
+ *   .between-keyboard-size .between-keyboard-size
+ *   .between-size-keyboad .between-size-keyboard
+ *   ```
  *
  * @param {Unit} size
  * @return {Block}
- * @see --media-queries--calculate
  * @type {Mixin}
  * @api public
  */
 
 screen-size-between(low, high)
-  lowsz = low in media-queries--sizes ? media-queries--sizes[low][0] : low
-  highsz = high in media-queries--sizes ? media-queries--sizes[high][1] : high
+  lowsz = low in --sizes ? --sizes[low][0] : low
+  highsz = high in --sizes ? --sizes[high][1] : high
   condition = 'screen and (min-width: %s) and (max-width: %s)' % (lowsz highsz)
   @media condition
     {block}
@@ -189,42 +288,43 @@ screen-size-between(low, high)
 /**
  * Generate a query for screens that match a given `size`.
  *
- * ## Examples:
+ * Examples:
  *
- *     +screen-size('palm')
- *       .palm
- *         color green
+ *   ```stylus
+ *   +screen-size('palm')
+ *     .palm
+ *       color green
+ *   +screen-size('tablet')
+ *     .tablet
+ *       color green
+ *   +screen-size('laptop')
+ *     .laptop
+ *       color green
+ *   +screen-size('desktop')
+ *     .desktop
+ *       color green
+ *   +screen-size('wide')
+ *     .wide
+ *       color green
+ *   ```
  *
- *     +screen-size('tablet')
- *       .tablet
- *         color green
- *
- *     +screen-size('laptop')
- *       .laptop
- *         color green
- *
- *     +screen-size('desktop')
- *       .desktop
- *         color green
- *
- *     +screen-size('desktop')
- *       .desktop
- *         color green
- *
- *     +screen-size('large-desktop')
- *       .large-desktop
- *         color green
+ *   ```jade
+ *   .palm .palm
+ *   .tablet .tablet
+ *   .laptop .laptop
+ *   .desktop .desktop
+ *   .wide .wide
+ *   ```
  *
  * @param {Unit} size
  * @return {Block}
- * @see --media-queries--calculate
  * @type {Mixin}
  * @api public
  */
 
 screen-size(size)
-  lowsz = media-queries--sizes[size][0]
-  highsz = media-queries--sizes[size][1]
+  lowsz = --sizes[size][0]
+  highsz = --sizes[size][1]
   condition = 'screen and (min-width: %s) and (max-width: %s)' % (lowsz highsz)
   @media condition
     {block}
@@ -232,19 +332,25 @@ screen-size(size)
 /**
  * Generate a query for screens that match a given `orientation`.
  *
- * ## Examples:
+ * Examples:
  *
- *     +screen-orientation('portrait')
- *       .orientationPortrait
- *         color green
+ *   ```stylus
+ *   +screen-orientation('portrait')
+ *     .orientation-portrait
+ *       color green
  *
- *     +screen-orientation('landscape')
- *       .orientationLandscape
- *         color green
+ *   +screen-orientation('landscape')
+ *     .orientation-landscape
+ *       color green
+ *   ```
+ *
+ *   ```jade
+ *   .orientation-portrait .orientation-portrait
+ *   .orientation-landscape .orientation-landscape
+ *   ```
  *
  * @param {Unit} orientation
  * @return {Block}
- * @see --media-queries--calculate
  * @type {Mixin}
  * @api public
  */
@@ -257,14 +363,19 @@ screen-orientation(orientation)
 /**
  * Generate a query for high DPI screens
  *
- * ## Example:
+ * Example:
  *
- *      +screen-high-DPI()
- *        .high-DPI
- *          color green
+ *   ```stylus
+ *   +screen-high-DPI()
+ *     .high-DPI
+ *       color green
+ *   ```
+ *
+ *   ```jade
+ *   .high-DPI .high-DPI
+ *   ```
  *
  * @return {Block}
- * @see --media-queries--calculate
  * @type {Mixin}
  * @api public
  */
@@ -1060,7 +1171,7 @@ require.alias("camshaft-codedoc/index.js", "camshaft-codedoc/index.js");
 require.alias("pilot/lib/client.js", "pilot/index.js");
 var codedoc = require('codedoc');
 var preload = document.getElementById('main').getAttribute('data-preload') || '';
-var theme = 'chrome';
+var theme = 'github';
 
 function filter(content, key, fn){
   if (key === 'stylus') return stylus(preload + '\n' + content).render(fn);
@@ -1072,7 +1183,6 @@ function bind(id, fn){
   var ed = ace.edit(id);
   var mode = getMode(id);
   window.ed = ed;
-  console.log(ed);
 
   setMode(mode);
   ed.setTheme('ace/theme/' + theme);
@@ -1080,6 +1190,11 @@ function bind(id, fn){
   ed.setShowPrintMargin(false);
   ed.setHighlightGutterLine(false);
   ed.setShowFoldWidgets(false);
+  ed.setFontSize(12);
+  ed.renderer.setShowGutter(false);
+  ed.setOptions({
+    maxLines: Infinity
+  });
 
   ed.getSession().on('change', function(e){
     var val = ed.getValue();
@@ -1104,64 +1219,48 @@ function getMode(id){
   if (~id.indexOf('stylus')) return 'stylus';
   if (~id.indexOf('markup')) return 'jade';
 }
-</script><section class="variables"><h2>variables</h2><div class="def"><h3>version</h3><div class="example"><div id="variables-version-0-stylus" class="stylus">h1
-	background version</div><div id="variables-version-0-markup" class="markup">h1 media-queries</div><script id="variables-version-0-output" type="application/x-minstache" data-codedoc="{&quot;stylus&quot;: &quot;variables-version-0-stylus&quot;, &quot;markup&quot;: &quot;variables-version-0-markup&quot;}"><style>
-  {{!stylus}}
-</style>
-<div>
-  {{!markup}}
-</div>
-</script><script>init("variables-version-0-output");</script></div></div><div class="def"><h3>sizes</h3><div class="example"><div id="variables-sizes-0-stylus" class="stylus">h1
-	background sizes</div><div id="variables-sizes-0-markup" class="markup">h1 media-queries</div><script id="variables-sizes-0-output" type="application/x-minstache" data-codedoc="{&quot;stylus&quot;: &quot;variables-sizes-0-stylus&quot;, &quot;markup&quot;: &quot;variables-sizes-0-markup&quot;}"><style>
-  {{!stylus}}
-</style>
-<div>
-  {{!markup}}
-</div>
-</script><script>init("variables-sizes-0-output");</script></div></div><div class="def"><h3>devices</h3><div class="example"><div id="variables-devices-0-stylus" class="stylus">h1
-	background devices</div><div id="variables-devices-0-markup" class="markup">h1 media-queries</div><script id="variables-devices-0-output" type="application/x-minstache" data-codedoc="{&quot;stylus&quot;: &quot;variables-devices-0-stylus&quot;, &quot;markup&quot;: &quot;variables-devices-0-markup&quot;}"><style>
-  {{!stylus}}
-</style>
-<div>
-  {{!markup}}
-</div>
-</script><script>init("variables-devices-0-output");</script></div></div><div class="def"><h3>unit</h3><div class="example"><div id="variables-unit-0-stylus" class="stylus">h1
-	background unit</div><div id="variables-unit-0-markup" class="markup">h1 media-queries</div><script id="variables-unit-0-output" type="application/x-minstache" data-codedoc="{&quot;stylus&quot;: &quot;variables-unit-0-stylus&quot;, &quot;markup&quot;: &quot;variables-unit-0-markup&quot;}"><style>
-  {{!stylus}}
-</style>
-<div>
-  {{!markup}}
-</div>
-</script><script>init("variables-unit-0-output");</script></div></div></section><section class="functions"><h2>functions</h2><div class="def"><h3>screen-size-above</h3><div class="example"><div id="functions-screen-size-above-0-stylus" class="stylus">h1
-  +screen-size-above('desktop')
-    background-color green</div><div id="functions-screen-size-above-0-markup" class="markup">h1 size</div><script id="functions-screen-size-above-0-output" type="application/x-minstache" data-codedoc="{&quot;stylus&quot;: &quot;functions-screen-size-above-0-stylus&quot;, &quot;markup&quot;: &quot;functions-screen-size-above-0-markup&quot;}"><style>
-  {{!stylus}}
-</style>
-<div>
-  {{!markup}}
-</div>
-</script><script>init("functions-screen-size-above-0-output");</script></div></div><div class="def"><h3>screen-size-below</h3><div class="example"><div id="functions-screen-size-below-0-stylus" class="stylus">h1
-  +screen-size-below('desktop')
-    background-color green</div><div id="functions-screen-size-below-0-markup" class="markup">h1 size</div><script id="functions-screen-size-below-0-output" type="application/x-minstache" data-codedoc="{&quot;stylus&quot;: &quot;functions-screen-size-below-0-stylus&quot;, &quot;markup&quot;: &quot;functions-screen-size-below-0-markup&quot;}"><style>
-  {{!stylus}}
-</style>
-<div>
-  {{!markup}}
-</div>
-</script><script>init("functions-screen-size-below-0-output");</script></div></div><div class="def"><h3>screen-size</h3><div class="example"><div id="functions-screen-size-0-stylus" class="stylus">h1
-  +screen-size('desktop')
-    background-color green</div><div id="functions-screen-size-0-markup" class="markup">h1 size</div><script id="functions-screen-size-0-output" type="application/x-minstache" data-codedoc="{&quot;stylus&quot;: &quot;functions-screen-size-0-stylus&quot;, &quot;markup&quot;: &quot;functions-screen-size-0-markup&quot;}"><style>
-  {{!stylus}}
-</style>
-<div>
-  {{!markup}}
-</div>
-</script><script>init("functions-screen-size-0-output");</script></div></div><div class="def"><h3>screen-orientation</h3><div class="example"><div id="functions-screen-orientation-0-stylus" class="stylus">h1
-  +screen-orientation('desktop')
-    background-color green</div><div id="functions-screen-orientation-0-markup" class="markup">h1 orientation</div><script id="functions-screen-orientation-0-output" type="application/x-minstache" data-codedoc="{&quot;stylus&quot;: &quot;functions-screen-orientation-0-stylus&quot;, &quot;markup&quot;: &quot;functions-screen-orientation-0-markup&quot;}"><style>
-  {{!stylus}}
-</style>
-<div>
-  {{!markup}}
-</div>
-</script><script>init("functions-screen-orientation-0-output");</script></div></div></section></main></body></html>
+</script><section><h1>pilot</h1><div class="defs-package"><h3>Documentation generator for Stylus<br>Michael Vanasse &lt;mail@mndvns.com&gt;<br>git://github.com/mndvns/pilot.git</h3></div></section><section class="variables"><hr><h2>variables</h2><div class="defs"><div class="def">devices =  'palm' 'phone' 'tablet' 'laptop' 'desktop' 'wide'</div><div class="def">unit =  240</div></div></section><section class="functions"><hr><h2>functions</h2><ul class="defs-links"><li><a href="#screen-size-above-a">screen-size-above</a></li><li><a href="#screen-size-below-a">screen-size-below</a></li><li><a href="#screen-size-a">screen-size</a></li><li><a href="#screen-orientation-a">screen-orientation</a></li></ul><div class="defs"><div class="def"><div id="screen-size-above-a" class="example"><div class="summary"><strong><p>screen-size-above(<em>size</em>)</p></strong><p>Generate a query for screens above a given <code>size</code>.</p></div><div class="editors"><div id="functions-screen-size-above-0-stylus" class="stylus">+screen-size-above('tablet')
+  .above-keyword
+    color green
++screen-size-above(500px)
+  .above-size
+    color green</div><div id="functions-screen-size-above-0-markup" class="markup">.above-keyword .above-keyword
+.above-size .above-size</div></div><script id="functions-screen-size-above-0-output" type="application/x-minstache" data-codedoc="{&quot;stylus&quot;: &quot;functions-screen-size-above-0-stylus&quot;, &quot;markup&quot;: &quot;functions-screen-size-above-0-markup&quot;}"><style>{{!stylus}}</style>
+<div>{{!markup}}</div>
+</script><script>init("functions-screen-size-above-0-output");</script></div></div><div class="def"><div id="screen-size-below-a" class="example"><div class="summary"><strong><p>screen-size-below(<em>size</em>)</p></strong><p>Generate a query for screens below a given <code>size</code>.</p></div><div class="editors"><div id="functions-screen-size-below-0-stylus" class="stylus">+screen-size-below('wide')
+  .below-keyword
+    color green
++screen-size-below(1000px)
+  .below-size
+    color green</div><div id="functions-screen-size-below-0-markup" class="markup">.below-keyword .below-keyword
+.below-size .below-size</div></div><script id="functions-screen-size-below-0-output" type="application/x-minstache" data-codedoc="{&quot;stylus&quot;: &quot;functions-screen-size-below-0-stylus&quot;, &quot;markup&quot;: &quot;functions-screen-size-below-0-markup&quot;}"><style>{{!stylus}}</style>
+<div>{{!markup}}</div>
+</script><script>init("functions-screen-size-below-0-output");</script></div></div><div class="def"><div id="screen-size-a" class="example"><div class="summary"><strong><p>screen-size(<em>size</em>)</p></strong><p>Generate a query for screens that match a given <code>size</code>.</p></div><div class="editors"><div id="functions-screen-size-0-stylus" class="stylus">+screen-size('palm')
+  .palm
+    color green
++screen-size('tablet')
+  .tablet
+    color green
++screen-size('laptop')
+  .laptop
+    color green
++screen-size('desktop')
+  .desktop
+    color green
++screen-size('wide')
+  .wide
+    color green</div><div id="functions-screen-size-0-markup" class="markup">.palm .palm
+.tablet .tablet
+.laptop .laptop
+.desktop .desktop
+.wide .wide</div></div><script id="functions-screen-size-0-output" type="application/x-minstache" data-codedoc="{&quot;stylus&quot;: &quot;functions-screen-size-0-stylus&quot;, &quot;markup&quot;: &quot;functions-screen-size-0-markup&quot;}"><style>{{!stylus}}</style>
+<div>{{!markup}}</div>
+</script><script>init("functions-screen-size-0-output");</script></div></div><div class="def"><div id="screen-orientation-a" class="example"><div class="summary"><strong><p>screen-orientation(<em>orientation</em>)</p></strong><p>Generate a query for screens that match a given <code>orientation</code>.</p></div><div class="editors"><div id="functions-screen-orientation-0-stylus" class="stylus">+screen-orientation('portrait')
+  .orientation-portrait
+    color green
++screen-orientation('landscape')
+  .orientation-landscape
+    color green</div><div id="functions-screen-orientation-0-markup" class="markup">.orientation-portrait .orientation-portrait
+.orientation-landscape .orientation-landscape</div></div><script id="functions-screen-orientation-0-output" type="application/x-minstache" data-codedoc="{&quot;stylus&quot;: &quot;functions-screen-orientation-0-stylus&quot;, &quot;markup&quot;: &quot;functions-screen-orientation-0-markup&quot;}"><style>{{!stylus}}</style>
+<div>{{!markup}}</div>
+</script><script>init("functions-screen-orientation-0-output");</script></div></div></div></section></main></body></html>

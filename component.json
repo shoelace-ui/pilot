@@ -1,0 +1,16 @@
+{
+  "name": "pilot",
+  "repo": "shoelace-ui/pilot",
+  "description": "Styleguide generator",
+  "version": "0.0.1",
+  "keywords": [],
+  "dependencies": {
+    "camshaft/codedoc": "*"
+  },
+  "development": {},
+  "license": "MIT",
+  "main": "lib/client.js",
+  "scripts": [
+    "lib/client.js"
+  ]
+}

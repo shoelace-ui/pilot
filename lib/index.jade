@@ -1,0 +1,53 @@
+doctype html
+html
+  head
+    style
+      :stylus
+        @import './index.styl'
+
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.1.3/ace.js")
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/jade/1.3.0/jade.min.js")
+    script(src="http://learnboost.github.io/stylus/try/stylus.min.js")
+
+
+  body
+
+    // - var preload = 'html\n\tfont-family Arial';
+    // - var sections = [{name: 'foo', stylus: 'h1\n\tbackground red', markup: 'h1 hello there'}];
+    // - sections.push({name: 'bar', stylus: 'p\n\tcolor blue', markup: 'p look here'});
+
+    main(data-preload="#{globals.preload}")#main
+      script
+        include ../build/build.js
+        include ./render.js
+
+      each section in globals.sections
+        section(class= section.name)
+          h2= section.name
+
+          each def in section.defs
+            .def
+              h3= def.name
+
+              each example, idx in def.examples
+                .example
+                  - var prefix = section.name + "-" + def.name + "-" + idx + "-";
+                  - var stylus = prefix + "stylus";
+                  - var markup = prefix + "markup";
+                  - var output = prefix + "output";
+
+                  .stylus(id= stylus)= example.stylus
+                  .markup(id= markup)= example.markup
+
+                  script(id="#{output}",
+                    type="application/x-minstache",
+                    data-codedoc='{"stylus": "#{stylus}", "markup": "#{markup}"}').
+                    <style>
+                      {{!stylus}}
+                    </style>
+                    <div>
+                      {{!markup}}
+                    </div>
+
+                  script.
+                    init("#{output}");

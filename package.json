@@ -1,0 +1,29 @@
+{
+  "name": "pilot",
+  "description": "Documentation generator for Stylus",
+  "version": "0.1.0",
+  "author": "Michael Vanasse <mail@mndvns.com>",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/mndvns/pilot.git"
+  },
+  "keywords": [
+    "documentation",
+    "docs",
+    "stylus",
+    "styles"
+  ],
+  "bin": {
+    "pilot": "./bin/pilot"
+  },
+  "dependencies": {
+    "github-flavored-markdown": ">= 0.0.1",
+    "commander": "0.6.1",
+    "stylus": "^0.43.1",
+    "jade": "^1.3.1"
+  },
+  "devDependencies": {
+    "mocha": "*",
+    "should": "*"
+  }
+}

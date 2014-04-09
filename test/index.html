@@ -1,0 +1,1167 @@
+<!DOCTYPE html><html><head><style>html {
+  padding: 40px;
+  margin: 0;
+}
+body {
+  margin: 0;
+}
+.def,
+.example {
+  position: relative;
+  height: 200px;
+  width: 100%;
+  top: 0;
+}
+[id$="stylus"].stylus,
+[id$="markup"].markup {
+  position: relative;
+  top: 0;
+  right: 0px;
+  width: 25%;
+  height: 200px;
+}
+.variables {
+  overflow: hidden;
+  height: 50px;
+}
+div.ace_editor {
+  width: 25%;
+}
+div.ace-chrome .ace_gutter {
+  background: transparent;
+  color: transparent;
+}
+div.ace_gutter-cell {
+  right: 5px;
+  position: relative;
+  border-right: 1px solid #ccc;
+}
+span.ace_fold-widget {
+  display: none;
+}
+iframe {
+  resize: both;
+}
+</style><script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.1.3/ace.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/jade/1.3.0/jade.min.js"></script><script src="http://learnboost.github.io/stylus/try/stylus.min.js"></script></head><body><!-- - var preload = 'html\n\tfont-family Arial';--><!-- - var sections = [{name: 'foo', stylus: 'h1\n\tbackground red', markup: 'h1 hello there'}];--><!-- - sections.push({name: 'bar', stylus: 'p\n\tcolor blue', markup: 'p look here'});--><main data-preload="
+/*!
+ * media-queries
+ */
+
+/**
+ * Library version.
+ */
+
+media-queries--version = '0.0.3'
+
+/**
+ * Create hash to contain sizes.
+ */
+
+media-queries--sizes = {}
+
+/**
+ * Define default devices.
+ */
+
+media-queries--devices = 'palm' 'phone' 'tablet' 'laptop' 'desktop' 'large-desktop'
+
+/**
+ * Define default unit of measurement for `sizes`.
+ */
+
+media-queries--unit = 240
+
+/**
+ * Generate `devices` with the given `size`.
+ *
+ * @param {Array} devices
+ * @param {Number} measurement
+ * @type {Function}
+ * @api private
+ */
+
+--calculate(devices, size)
+  for name, i in devices
+    low = (i*size)px
+    high = (((i+1)*size) - 1)px
+    media-queries--sizes[name] = (low high)
+
+/**
+ * Generate default device sizes if not already present.
+ * @api private
+ */
+
+if not (length(media-queries--sizes))
+  --calculate(media-queries--devices, media-queries--unit)
+
+/**
+ * Generate a query for screens above a given `size`.
+ *
+ * ## Examples:
+ *
+ *     +screen-size-above('tablet')
+ *       .above-keyword
+ *         color green
+ *
+ *     +screen-size-above(500px)
+ *       .above-size
+ *         color green
+ *
+ * @param {Unit} size
+ * @return {Block}
+ * @see --media-queries--calculate
+ * @type {Mixin}
+ * @api public
+ */
+
+screen-size-above(size)
+  sz = size in media-queries--sizes ? media-queries--sizes[size][1] : size
+  condition = 'screen and (min-width: %s)' % sz
+  @media condition
+    {block}
+
+/**
+ * Generate a query for screens below a given `size`.
+ *
+ * Example:
+ *
+ * ```stylus
+ * +screen-size-below('large-desktop')
+ *   .below-keyword
+ *     color green
+ * +screen-size-below(1000px)
+ *   .below-size
+ *     color green
+ * ```
+ *
+ * ```jade
+ * .below-keyword below keyword
+ * .below-size below size
+ * ```
+ *
+ * @param {Unit} size
+ * @return {Block}
+ * @see --media-queries--calculate
+ * @api public
+ */
+
+screen-size-below(size)
+  sz = size in media-queries--sizes ? media-queries--sizes[size][0] : size
+  condition = 'screen and (max-width: %s)' % sz
+  @media condition
+    {block}
+
+/**
+ * Generate a query for screens between `low` and `high`.
+ *
+ * ## Examples:
+ *
+ *     +screen-size-between(500, 1000px)
+ *       .between-size-size
+ *         color green
+ *
+ *     +screen-size-between('tablet', 'laptop')
+ *       .between-keyword-keyword
+ *         color green
+ *
+ *     +screen-size-between('tablet', 1500px)
+ *       .between-keyword-size
+ *         color green
+ *
+ *     +screen-size-between(500px, 'laptop')
+ *       .between-size-keyword
+ *         color green
+ *
+ * @param {Unit} size
+ * @return {Block}
+ * @see --media-queries--calculate
+ * @type {Mixin}
+ * @api public
+ */
+
+screen-size-between(low, high)
+  lowsz = low in media-queries--sizes ? media-queries--sizes[low][0] : low
+  highsz = high in media-queries--sizes ? media-queries--sizes[high][1] : high
+  condition = 'screen and (min-width: %s) and (max-width: %s)' % (lowsz highsz)
+  @media condition
+    {block}
+
+/**
+ * Generate a query for screens that match a given `size`.
+ *
+ * ## Examples:
+ *
+ *     +screen-size('palm')
+ *       .palm
+ *         color green
+ *
+ *     +screen-size('tablet')
+ *       .tablet
+ *         color green
+ *
+ *     +screen-size('laptop')
+ *       .laptop
+ *         color green
+ *
+ *     +screen-size('desktop')
+ *       .desktop
+ *         color green
+ *
+ *     +screen-size('desktop')
+ *       .desktop
+ *         color green
+ *
+ *     +screen-size('large-desktop')
+ *       .large-desktop
+ *         color green
+ *
+ * @param {Unit} size
+ * @return {Block}
+ * @see --media-queries--calculate
+ * @type {Mixin}
+ * @api public
+ */
+
+screen-size(size)
+  lowsz = media-queries--sizes[size][0]
+  highsz = media-queries--sizes[size][1]
+  condition = 'screen and (min-width: %s) and (max-width: %s)' % (lowsz highsz)
+  @media condition
+    {block}
+
+/**
+ * Generate a query for screens that match a given `orientation`.
+ *
+ * ## Examples:
+ *
+ *     +screen-orientation('portrait')
+ *       .orientationPortrait
+ *         color green
+ *
+ *     +screen-orientation('landscape')
+ *       .orientationLandscape
+ *         color green
+ *
+ * @param {Unit} orientation
+ * @return {Block}
+ * @see --media-queries--calculate
+ * @type {Mixin}
+ * @api public
+ */
+
+screen-orientation(orientation)
+  condition = 'screen and (orientation: %s)' % unquote(orientation)
+  @media condition
+    {block}
+
+/**
+ * Generate a query for high DPI screens
+ *
+ * ## Example:
+ *
+ *      +screen-high-DPI()
+ *        .high-DPI
+ *          color green
+ *
+ * @return {Block}
+ * @see --media-queries--calculate
+ * @type {Mixin}
+ * @api public
+ */
+
+screen-high-DPI()
+  conditions = ()
+  all-conditions = ''
+  for prefix in '-webkit-min-' 'min--moz-' 'min-'
+    condition = 'only screen and (%sdevice-pixel-ratio: 2)' % prefix
+    push(conditions, condition)
+  all-conditions = join(', ', conditions)
+  @media all-conditions
+    {block}
+" id="main"><script>
+/**
+ * Require the given path.
+ *
+ * @param {String} path
+ * @return {Object} exports
+ * @api public
+ */
+
+function require(path, parent, orig) {
+  var resolved = require.resolve(path);
+
+  // lookup failed
+  if (null == resolved) {
+    orig = orig || path;
+    parent = parent || 'root';
+    var err = new Error('Failed to require "' + orig + '" from "' + parent + '"');
+    err.path = orig;
+    err.parent = parent;
+    err.require = true;
+    throw err;
+  }
+
+  var module = require.modules[resolved];
+
+  // perform real require()
+  // by invoking the module's
+  // registered function
+  if (!module._resolving && !module.exports) {
+    var mod = {};
+    mod.exports = {};
+    mod.client = mod.component = true;
+    module._resolving = true;
+    module.call(this, mod.exports, require.relative(resolved), mod);
+    delete module._resolving;
+    module.exports = mod.exports;
+  }
+
+  return module.exports;
+}
+
+/**
+ * Registered modules.
+ */
+
+require.modules = {};
+
+/**
+ * Registered aliases.
+ */
+
+require.aliases = {};
+
+/**
+ * Resolve `path`.
+ *
+ * Lookup:
+ *
+ *   - PATH/index.js
+ *   - PATH.js
+ *   - PATH
+ *
+ * @param {String} path
+ * @return {String} path or null
+ * @api private
+ */
+
+require.resolve = function(path) {
+  if (path.charAt(0) === '/') path = path.slice(1);
+
+  var paths = [
+    path,
+    path + '.js',
+    path + '.json',
+    path + '/index.js',
+    path + '/index.json'
+  ];
+
+  for (var i = 0; i < paths.length; i++) {
+    var path = paths[i];
+    if (require.modules.hasOwnProperty(path)) return path;
+    if (require.aliases.hasOwnProperty(path)) return require.aliases[path];
+  }
+};
+
+/**
+ * Normalize `path` relative to the current path.
+ *
+ * @param {String} curr
+ * @param {String} path
+ * @return {String}
+ * @api private
+ */
+
+require.normalize = function(curr, path) {
+  var segs = [];
+
+  if ('.' != path.charAt(0)) return path;
+
+  curr = curr.split('/');
+  path = path.split('/');
+
+  for (var i = 0; i < path.length; ++i) {
+    if ('..' == path[i]) {
+      curr.pop();
+    } else if ('.' != path[i] && '' != path[i]) {
+      segs.push(path[i]);
+    }
+  }
+
+  return curr.concat(segs).join('/');
+};
+
+/**
+ * Register module at `path` with callback `definition`.
+ *
+ * @param {String} path
+ * @param {Function} definition
+ * @api private
+ */
+
+require.register = function(path, definition) {
+  require.modules[path] = definition;
+};
+
+/**
+ * Alias a module definition.
+ *
+ * @param {String} from
+ * @param {String} to
+ * @api private
+ */
+
+require.alias = function(from, to) {
+  if (!require.modules.hasOwnProperty(from)) {
+    throw new Error('Failed to alias "' + from + '", it does not exist');
+  }
+  require.aliases[to] = from;
+};
+
+/**
+ * Return a require function relative to the `parent` path.
+ *
+ * @param {String} parent
+ * @return {Function}
+ * @api private
+ */
+
+require.relative = function(parent) {
+  var p = require.normalize(parent, '..');
+
+  /**
+   * lastIndexOf helper.
+   */
+
+  function lastIndexOf(arr, obj) {
+    var i = arr.length;
+    while (i--) {
+      if (arr[i] === obj) return i;
+    }
+    return -1;
+  }
+
+  /**
+   * The relative require() itself.
+   */
+
+  function localRequire(path) {
+    var resolved = localRequire.resolve(path);
+    return require(resolved, parent, path);
+  }
+
+  /**
+   * Resolve relative to the parent.
+   */
+
+  localRequire.resolve = function(path) {
+    var c = path.charAt(0);
+    if ('/' == c) return path.slice(1);
+    if ('.' == c) return require.normalize(p, path);
+
+    // resolve deps by returning
+    // the dep in the nearest "deps"
+    // directory
+    var segs = parent.split('/');
+    var i = lastIndexOf(segs, 'deps') + 1;
+    if (!i) i = 0;
+    path = segs.slice(0, i + 1).join('/') + '/deps/' + path;
+    return path;
+  };
+
+  /**
+   * Check if module is defined at `path`.
+   */
+
+  localRequire.exists = function(path) {
+    return require.modules.hasOwnProperty(localRequire.resolve(path));
+  };
+
+  return localRequire;
+};
+require.register("visionmedia-minstache/index.js", function(exports, require, module){
+
+/**
+ * Expose `render()`.`
+ */
+
+exports = module.exports = render;
+
+/**
+ * Expose `compile()`.
+ */
+
+exports.compile = compile;
+
+/**
+ * Render the given mustache `str` with `obj`.
+ *
+ * @param {String} str
+ * @param {Object} obj
+ * @return {String}
+ * @api public
+ */
+
+function render(str, obj) {
+  obj = obj || {};
+  var fn = compile(str);
+  return fn(obj);
+}
+
+/**
+ * Compile the given `str` to a `Function`.
+ *
+ * @param {String} str
+ * @return {Function}
+ * @api public
+ */
+
+function compile(str) {
+  var js = [];
+  var toks = parse(str);
+  var tok;
+
+  for (var i = 0; i < toks.length; ++i) {
+    tok = toks[i];
+    if (i % 2 == 0) {
+      js.push('"' + tok.replace(/"/g, '\\"') + '"');
+    } else {
+      switch (tok[0]) {
+        case '/':
+          tok = tok.slice(1);
+          js.push(') + ');
+          break;
+        case '^':
+          tok = tok.slice(1);
+          assertProperty(tok);
+          js.push(' + section(obj, "' + tok + '", true, ');
+          break;
+        case '#':
+          tok = tok.slice(1);
+          assertProperty(tok);
+          js.push(' + section(obj, "' + tok + '", false, ');
+          break;
+        case '!':
+          tok = tok.slice(1);
+          assertProperty(tok);
+          js.push(' + obj.' + tok + ' + ');
+          break;
+        default:
+          assertProperty(tok);
+          js.push(' + escape(obj.' + tok + ') + ');
+      }
+    }
+  }
+
+  js = '\n'
+    + indent(escape.toString()) + ';\n\n'
+    + indent(section.toString()) + ';\n\n'
+    + '  return ' + js.join('').replace(/\n/g, '\\n');
+
+  return new Function('obj', js);
+}
+
+/**
+ * Assert that `prop` is a valid property.
+ *
+ * @param {String} prop
+ * @api private
+ */
+
+function assertProperty(prop) {
+  if (!prop.match(/^[\w.]+$/)) throw new Error('invalid property "' + prop + '"');
+}
+
+/**
+ * Parse `str`.
+ *
+ * @param {String} str
+ * @return {Array}
+ * @api private
+ */
+
+function parse(str) {
+  return str.split(/\{\{|\}\}/);
+}
+
+/**
+ * Indent `str`.
+ *
+ * @param {String} str
+ * @return {String}
+ * @api private
+ */
+
+function indent(str) {
+  return str.replace(/^/gm, '  ');
+}
+
+/**
+ * Section handler.
+ *
+ * @param {Object} context obj
+ * @param {String} prop
+ * @param {String} str
+ * @param {Boolean} negate
+ * @api private
+ */
+
+function section(obj, prop, negate, str) {
+  var val = obj[prop];
+  if ('function' == typeof val) return val.call(obj, str);
+  if (negate) val = !val;
+  if (val) return str;
+  return '';
+}
+
+/**
+ * Escape the given `html`.
+ *
+ * @param {String} html
+ * @return {String}
+ * @api private
+ */
+
+function escape(html) {
+  return String(html)
+    .replace(/&/g, '&amp;')
+    .replace(/"/g, '&quot;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
+});
+require.register("component-props/index.js", function(exports, require, module){
+/**
+ * Global Names
+ */
+
+var globals = /\b(this|Array|Date|Object|Math|JSON)\b/g;
+
+/**
+ * Return immediate identifiers parsed from `str`.
+ *
+ * @param {String} str
+ * @param {String|Function} map function or prefix
+ * @return {Array}
+ * @api public
+ */
+
+module.exports = function(str, fn){
+  var p = unique(props(str));
+  if (fn && 'string' == typeof fn) fn = prefixed(fn);
+  if (fn) return map(str, p, fn);
+  return p;
+};
+
+/**
+ * Return immediate identifiers in `str`.
+ *
+ * @param {String} str
+ * @return {Array}
+ * @api private
+ */
+
+function props(str) {
+  return str
+    .replace(/\.\w+|\w+ *\(|"[^"]*"|'[^']*'|\/([^/]+)\//g, '')
+    .replace(globals, '')
+    .match(/[$a-zA-Z_]\w*/g)
+    || [];
+}
+
+/**
+ * Return `str` with `props` mapped with `fn`.
+ *
+ * @param {String} str
+ * @param {Array} props
+ * @param {Function} fn
+ * @return {String}
+ * @api private
+ */
+
+function map(str, props, fn) {
+  var re = /\.\w+|\w+ *\(|"[^"]*"|'[^']*'|\/([^/]+)\/|[a-zA-Z_]\w*/g;
+  return str.replace(re, function(_){
+    if ('(' == _[_.length - 1]) return fn(_);
+    if (!~props.indexOf(_)) return _;
+    return fn(_);
+  });
+}
+
+/**
+ * Return unique array.
+ *
+ * @param {Array} arr
+ * @return {Array}
+ * @api private
+ */
+
+function unique(arr) {
+  var ret = [];
+
+  for (var i = 0; i < arr.length; i++) {
+    if (~ret.indexOf(arr[i])) continue;
+    ret.push(arr[i]);
+  }
+
+  return ret;
+}
+
+/**
+ * Map with prefix `str`.
+ */
+
+function prefixed(str) {
+  return function(_){
+    return str + _;
+  };
+}
+
+});
+require.register("component-to-function/index.js", function(exports, require, module){
+/**
+ * Module Dependencies
+ */
+
+var expr = require('props');
+
+/**
+ * Expose `toFunction()`.
+ */
+
+module.exports = toFunction;
+
+/**
+ * Convert `obj` to a `Function`.
+ *
+ * @param {Mixed} obj
+ * @return {Function}
+ * @api private
+ */
+
+function toFunction(obj) {
+  switch ({}.toString.call(obj)) {
+    case '[object Object]':
+      return objectToFunction(obj);
+    case '[object Function]':
+      return obj;
+    case '[object String]':
+      return stringToFunction(obj);
+    case '[object RegExp]':
+      return regexpToFunction(obj);
+    default:
+      return defaultToFunction(obj);
+  }
+}
+
+/**
+ * Default to strict equality.
+ *
+ * @param {Mixed} val
+ * @return {Function}
+ * @api private
+ */
+
+function defaultToFunction(val) {
+  return function(obj){
+    return val === obj;
+  }
+}
+
+/**
+ * Convert `re` to a function.
+ *
+ * @param {RegExp} re
+ * @return {Function}
+ * @api private
+ */
+
+function regexpToFunction(re) {
+  return function(obj){
+    return re.test(obj);
+  }
+}
+
+/**
+ * Convert property `str` to a function.
+ *
+ * @param {String} str
+ * @return {Function}
+ * @api private
+ */
+
+function stringToFunction(str) {
+  // immediate such as "> 20"
+  if (/^ *\W+/.test(str)) return new Function('_', 'return _ ' + str);
+
+  // properties such as "name.first" or "age > 18" or "age > 18 && age < 36"
+  return new Function('_', 'return ' + get(str));
+}
+
+/**
+ * Convert `object` to a function.
+ *
+ * @param {Object} object
+ * @return {Function}
+ * @api private
+ */
+
+function objectToFunction(obj) {
+  var match = {}
+  for (var key in obj) {
+    match[key] = typeof obj[key] === 'string'
+      ? defaultToFunction(obj[key])
+      : toFunction(obj[key])
+  }
+  return function(val){
+    if (typeof val !== 'object') return false;
+    for (var key in match) {
+      if (!(key in val)) return false;
+      if (!match[key](val[key])) return false;
+    }
+    return true;
+  }
+}
+
+/**
+ * Built the getter function. Supports getter style functions
+ *
+ * @param {String} str
+ * @return {String}
+ * @api private
+ */
+
+function get(str) {
+  var props = expr(str);
+  if (!props.length) return '_.' + str;
+
+  var val;
+  for(var i = 0, prop; prop = props[i]; i++) {
+    val = '_.' + prop;
+    val = "('function' == typeof " + val + " ? " + val + "() : " + val + ")";
+    str = str.replace(new RegExp(prop, 'g'), val);
+  }
+
+  return str;
+}
+
+});
+require.register("component-type/index.js", function(exports, require, module){
+
+/**
+ * toString ref.
+ */
+
+var toString = Object.prototype.toString;
+
+/**
+ * Return the type of `val`.
+ *
+ * @param {Mixed} val
+ * @return {String}
+ * @api public
+ */
+
+module.exports = function(val){
+  switch (toString.call(val)) {
+    case '[object Function]': return 'function';
+    case '[object Date]': return 'date';
+    case '[object RegExp]': return 'regexp';
+    case '[object Arguments]': return 'arguments';
+    case '[object Array]': return 'array';
+    case '[object String]': return 'string';
+  }
+
+  if (val === null) return 'null';
+  if (val === undefined) return 'undefined';
+  if (val && val.nodeType === 1) return 'element';
+  if (val === Object(val)) return 'object';
+
+  return typeof val;
+};
+
+});
+require.register("component-each/index.js", function(exports, require, module){
+
+/**
+ * Module dependencies.
+ */
+
+var type = require('type');
+var toFunction = require('to-function');
+
+/**
+ * HOP reference.
+ */
+
+var has = Object.prototype.hasOwnProperty;
+
+/**
+ * Iterate the given `obj` and invoke `fn(val, i)`
+ * in optional context `ctx`.
+ *
+ * @param {String|Array|Object} obj
+ * @param {Function} fn
+ * @param {Object} [ctx]
+ * @api public
+ */
+
+module.exports = function(obj, fn, ctx){
+  fn = toFunction(fn);
+  ctx = ctx || this;
+  switch (type(obj)) {
+    case 'array':
+      return array(obj, fn, ctx);
+    case 'object':
+      if ('number' == typeof obj.length) return array(obj, fn, ctx);
+      return object(obj, fn, ctx);
+    case 'string':
+      return string(obj, fn, ctx);
+  }
+};
+
+/**
+ * Iterate string chars.
+ *
+ * @param {String} obj
+ * @param {Function} fn
+ * @param {Object} ctx
+ * @api private
+ */
+
+function string(obj, fn, ctx) {
+  for (var i = 0; i < obj.length; ++i) {
+    fn.call(ctx, obj.charAt(i), i);
+  }
+}
+
+/**
+ * Iterate object keys.
+ *
+ * @param {Object} obj
+ * @param {Function} fn
+ * @param {Object} ctx
+ * @api private
+ */
+
+function object(obj, fn, ctx) {
+  for (var key in obj) {
+    if (has.call(obj, key)) {
+      fn.call(ctx, key, obj[key]);
+    }
+  }
+}
+
+/**
+ * Iterate array-ish.
+ *
+ * @param {Array|Object} obj
+ * @param {Function} fn
+ * @param {Object} ctx
+ * @api private
+ */
+
+function array(obj, fn, ctx) {
+  for (var i = 0; i < obj.length; ++i) {
+    fn.call(ctx, obj[i], i);
+  }
+}
+
+});
+require.register("camshaft-codedoc/index.js", function(exports, require, module){
+/**
+ * Module dependencies
+ */
+
+var each = require('each');
+var minstache = require('minstache');
+
+module.exports = function(element, filter, watch) {
+  var bindings = JSON.parse(element.getAttribute('data-codedoc'));
+
+  filter = filter || defaultFilter;
+  watch = watch || defaultWatch;
+
+  var locals = {
+    closeScript: 'script'
+  };
+
+  var renderer = minstache.compile(element.text);
+  var iframe = document.createElement('iframe');
+  iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin');
+  iframe.className = element.className;
+  element.parentNode.replaceChild(iframe, element);
+
+  each(bindings, function(key, selector) {
+    watch(selector, onchange);
+
+    function onchange(value) {
+      if (value === false) return;
+      filter(value, key, function(err, content) {
+        if (err) console.error(err); // todo expose the error
+        locals[key] = content;
+        render();
+      });
+    }
+    onchange(false);
+  });
+
+
+  function render() {
+    var out = renderer(locals);
+    var preview = iframe.contentDocument || iframe.contentWindow.document;
+    preview.open();
+    preview.write(out);
+    preview.close();
+  }
+  render();
+};
+
+function defaultWatch(selector, fn) {
+  var textarea = document.getElementById(selector);
+  textarea.addEventListener('keyup', function(event) {
+    fn(textarea.value || textarea.innerHTML);
+  }, false);
+}
+
+function defaultFilter(content, key, fn) {
+  fn(null, content);
+}
+
+});
+require.register("pilot/lib/client.js", function(exports, require, module){
+
+var codedoc = require('codedoc');
+
+module.exports = function(){
+  console.log('hi');
+};
+
+});
+
+
+
+
+
+
+require.alias("camshaft-codedoc/index.js", "pilot/deps/codedoc/index.js");
+require.alias("camshaft-codedoc/index.js", "pilot/deps/codedoc/index.js");
+require.alias("camshaft-codedoc/index.js", "codedoc/index.js");
+require.alias("visionmedia-minstache/index.js", "camshaft-codedoc/deps/minstache/index.js");
+
+require.alias("component-each/index.js", "camshaft-codedoc/deps/each/index.js");
+require.alias("component-to-function/index.js", "component-each/deps/to-function/index.js");
+require.alias("component-props/index.js", "component-to-function/deps/props/index.js");
+
+require.alias("component-type/index.js", "component-each/deps/type/index.js");
+
+require.alias("camshaft-codedoc/index.js", "camshaft-codedoc/index.js");
+require.alias("pilot/lib/client.js", "pilot/index.js");
+var codedoc = require('codedoc');
+var preload = document.getElementById('main').getAttribute('data-preload') || '';
+var theme = 'chrome';
+
+function filter(content, key, fn){
+  if (key === 'stylus') return stylus(preload + '\n' + content).render(fn);
+  if (key === 'markup' && content.charAt(0) !== '<') return fn(null, jade.render(content));
+  fn(null, content);
+}
+
+function bind(id, fn){
+  var ed = ace.edit(id);
+  var mode = getMode(id);
+  window.ed = ed;
+  console.log(ed);
+
+  setMode(mode);
+  ed.setTheme('ace/theme/' + theme);
+  ed.setHighlightActiveLine(false);
+  ed.setShowPrintMargin(false);
+  ed.setHighlightGutterLine(false);
+  ed.setShowFoldWidgets(false);
+
+  ed.getSession().on('change', function(e){
+    var val = ed.getValue();
+    fn(val);
+    if (mode === 'jade' && val.charAt(0) === '<') setMode('html');
+    if (mode === 'html' && val.charAt(0) !== '<') setMode('jade');
+  });
+
+  fn(ed.getValue());
+
+  function setMode(name){
+    ed.getSession().setMode('ace/mode/' + name);
+    mode = name;
+  }
+}
+
+function init(output){
+  codedoc(document.getElementById(output), filter, bind);
+}
+
+function getMode(id){
+  if (~id.indexOf('stylus')) return 'stylus';
+  if (~id.indexOf('markup')) return 'jade';
+}
+</script><section class="variables"><h2>variables</h2><div class="def"><h3>version</h3><div class="example"><div id="variables-version-0-stylus" class="stylus">h1
+	background version</div><div id="variables-version-0-markup" class="markup">h1 media-queries</div><script id="variables-version-0-output" type="application/x-minstache" data-codedoc="{&quot;stylus&quot;: &quot;variables-version-0-stylus&quot;, &quot;markup&quot;: &quot;variables-version-0-markup&quot;}"><style>
+  {{!stylus}}
+</style>
+<div>
+  {{!markup}}
+</div>
+</script><script>init("variables-version-0-output");</script></div></div><div class="def"><h3>sizes</h3><div class="example"><div id="variables-sizes-0-stylus" class="stylus">h1
+	background sizes</div><div id="variables-sizes-0-markup" class="markup">h1 media-queries</div><script id="variables-sizes-0-output" type="application/x-minstache" data-codedoc="{&quot;stylus&quot;: &quot;variables-sizes-0-stylus&quot;, &quot;markup&quot;: &quot;variables-sizes-0-markup&quot;}"><style>
+  {{!stylus}}
+</style>
+<div>
+  {{!markup}}
+</div>
+</script><script>init("variables-sizes-0-output");</script></div></div><div class="def"><h3>devices</h3><div class="example"><div id="variables-devices-0-stylus" class="stylus">h1
+	background devices</div><div id="variables-devices-0-markup" class="markup">h1 media-queries</div><script id="variables-devices-0-output" type="application/x-minstache" data-codedoc="{&quot;stylus&quot;: &quot;variables-devices-0-stylus&quot;, &quot;markup&quot;: &quot;variables-devices-0-markup&quot;}"><style>
+  {{!stylus}}
+</style>
+<div>
+  {{!markup}}
+</div>
+</script><script>init("variables-devices-0-output");</script></div></div><div class="def"><h3>unit</h3><div class="example"><div id="variables-unit-0-stylus" class="stylus">h1
+	background unit</div><div id="variables-unit-0-markup" class="markup">h1 media-queries</div><script id="variables-unit-0-output" type="application/x-minstache" data-codedoc="{&quot;stylus&quot;: &quot;variables-unit-0-stylus&quot;, &quot;markup&quot;: &quot;variables-unit-0-markup&quot;}"><style>
+  {{!stylus}}
+</style>
+<div>
+  {{!markup}}
+</div>
+</script><script>init("variables-unit-0-output");</script></div></div></section><section class="functions"><h2>functions</h2><div class="def"><h3>screen-size-above</h3><div class="example"><div id="functions-screen-size-above-0-stylus" class="stylus">h1
+  +screen-size-above('desktop')
+    background-color green</div><div id="functions-screen-size-above-0-markup" class="markup">h1 size</div><script id="functions-screen-size-above-0-output" type="application/x-minstache" data-codedoc="{&quot;stylus&quot;: &quot;functions-screen-size-above-0-stylus&quot;, &quot;markup&quot;: &quot;functions-screen-size-above-0-markup&quot;}"><style>
+  {{!stylus}}
+</style>
+<div>
+  {{!markup}}
+</div>
+</script><script>init("functions-screen-size-above-0-output");</script></div></div><div class="def"><h3>screen-size-below</h3><div class="example"><div id="functions-screen-size-below-0-stylus" class="stylus">h1
+  +screen-size-below('desktop')
+    background-color green</div><div id="functions-screen-size-below-0-markup" class="markup">h1 size</div><script id="functions-screen-size-below-0-output" type="application/x-minstache" data-codedoc="{&quot;stylus&quot;: &quot;functions-screen-size-below-0-stylus&quot;, &quot;markup&quot;: &quot;functions-screen-size-below-0-markup&quot;}"><style>
+  {{!stylus}}
+</style>
+<div>
+  {{!markup}}
+</div>
+</script><script>init("functions-screen-size-below-0-output");</script></div></div><div class="def"><h3>screen-size</h3><div class="example"><div id="functions-screen-size-0-stylus" class="stylus">h1
+  +screen-size('desktop')
+    background-color green</div><div id="functions-screen-size-0-markup" class="markup">h1 size</div><script id="functions-screen-size-0-output" type="application/x-minstache" data-codedoc="{&quot;stylus&quot;: &quot;functions-screen-size-0-stylus&quot;, &quot;markup&quot;: &quot;functions-screen-size-0-markup&quot;}"><style>
+  {{!stylus}}
+</style>
+<div>
+  {{!markup}}
+</div>
+</script><script>init("functions-screen-size-0-output");</script></div></div><div class="def"><h3>screen-orientation</h3><div class="example"><div id="functions-screen-orientation-0-stylus" class="stylus">h1
+  +screen-orientation('desktop')
+    background-color green</div><div id="functions-screen-orientation-0-markup" class="markup">h1 orientation</div><script id="functions-screen-orientation-0-output" type="application/x-minstache" data-codedoc="{&quot;stylus&quot;: &quot;functions-screen-orientation-0-stylus&quot;, &quot;markup&quot;: &quot;functions-screen-orientation-0-markup&quot;}"><style>
+  {{!stylus}}
+</style>
+<div>
+  {{!markup}}
+</div>
+</script><script>init("functions-screen-orientation-0-output");</script></div></div></section></main></body></html>

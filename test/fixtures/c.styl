@@ -1,0 +1,236 @@
+
+/*!
+ * media-queries
+ */
+
+/**
+ * Library version.
+ */
+
+media-queries--version = '0.0.3'
+
+/**
+ * Create hash to contain sizes.
+ */
+
+media-queries--sizes = {}
+
+/**
+ * Define default devices.
+ */
+
+media-queries--devices = 'palm' 'phone' 'tablet' 'laptop' 'desktop' 'large-desktop'
+
+/**
+ * Define default unit of measurement for `sizes`.
+ */
+
+media-queries--unit = 240
+
+/**
+ * Generate `devices` with the given `size`.
+ *
+ * @param {Array} devices
+ * @param {Number} measurement
+ * @type {Function}
+ * @api private
+ */
+
+--calculate(devices, size)
+  for name, i in devices
+    low = (i*size)px
+    high = (((i+1)*size) - 1)px
+    media-queries--sizes[name] = (low high)
+
+/**
+ * Generate default device sizes if not already present.
+ * @api private
+ */
+
+if not (length(media-queries--sizes))
+  --calculate(media-queries--devices, media-queries--unit)
+
+/**
+ * Generate a query for screens above a given `size`.
+ *
+ * ## Examples:
+ *
+ *     +screen-size-above('tablet')
+ *       .above-keyword
+ *         color green
+ *
+ *     +screen-size-above(500px)
+ *       .above-size
+ *         color green
+ *
+ * @param {Unit} size
+ * @return {Block}
+ * @see --media-queries--calculate
+ * @type {Mixin}
+ * @api public
+ */
+
+screen-size-above(size)
+  sz = size in media-queries--sizes ? media-queries--sizes[size][1] : size
+  condition = 'screen and (min-width: %s)' % sz
+  @media condition
+    {block}
+
+/**
+ * Generate a query for screens below a given `size`.
+ *
+ * Example:
+ *
+ * ```stylus
+ * +screen-size-below('large-desktop')
+ *   .below-keyword
+ *     color green
+ * +screen-size-below(1000px)
+ *   .below-size
+ *     color green
+ * ```
+ *
+ * ```jade
+ * .below-keyword below keyword
+ * .below-size below size
+ * ```
+ *
+ * @param {Unit} size
+ * @return {Block}
+ * @see --media-queries--calculate
+ * @api public
+ */
+
+screen-size-below(size)
+  sz = size in media-queries--sizes ? media-queries--sizes[size][0] : size
+  condition = 'screen and (max-width: %s)' % sz
+  @media condition
+    {block}
+
+/**
+ * Generate a query for screens between `low` and `high`.
+ *
+ * ## Examples:
+ *
+ *     +screen-size-between(500, 1000px)
+ *       .between-size-size
+ *         color green
+ *
+ *     +screen-size-between('tablet', 'laptop')
+ *       .between-keyword-keyword
+ *         color green
+ *
+ *     +screen-size-between('tablet', 1500px)
+ *       .between-keyword-size
+ *         color green
+ *
+ *     +screen-size-between(500px, 'laptop')
+ *       .between-size-keyword
+ *         color green
+ *
+ * @param {Unit} size
+ * @return {Block}
+ * @see --media-queries--calculate
+ * @type {Mixin}
+ * @api public
+ */
+
+screen-size-between(low, high)
+  lowsz = low in media-queries--sizes ? media-queries--sizes[low][0] : low
+  highsz = high in media-queries--sizes ? media-queries--sizes[high][1] : high
+  condition = 'screen and (min-width: %s) and (max-width: %s)' % (lowsz highsz)
+  @media condition
+    {block}
+
+/**
+ * Generate a query for screens that match a given `size`.
+ *
+ * ## Examples:
+ *
+ *     +screen-size('palm')
+ *       .palm
+ *         color green
+ *
+ *     +screen-size('tablet')
+ *       .tablet
+ *         color green
+ *
+ *     +screen-size('laptop')
+ *       .laptop
+ *         color green
+ *
+ *     +screen-size('desktop')
+ *       .desktop
+ *         color green
+ *
+ *     +screen-size('desktop')
+ *       .desktop
+ *         color green
+ *
+ *     +screen-size('large-desktop')
+ *       .large-desktop
+ *         color green
+ *
+ * @param {Unit} size
+ * @return {Block}
+ * @see --media-queries--calculate
+ * @type {Mixin}
+ * @api public
+ */
+
+screen-size(size)
+  lowsz = media-queries--sizes[size][0]
+  highsz = media-queries--sizes[size][1]
+  condition = 'screen and (min-width: %s) and (max-width: %s)' % (lowsz highsz)
+  @media condition
+    {block}
+
+/**
+ * Generate a query for screens that match a given `orientation`.
+ *
+ * ## Examples:
+ *
+ *     +screen-orientation('portrait')
+ *       .orientationPortrait
+ *         color green
+ *
+ *     +screen-orientation('landscape')
+ *       .orientationLandscape
+ *         color green
+ *
+ * @param {Unit} orientation
+ * @return {Block}
+ * @see --media-queries--calculate
+ * @type {Mixin}
+ * @api public
+ */
+
+screen-orientation(orientation)
+  condition = 'screen and (orientation: %s)' % unquote(orientation)
+  @media condition
+    {block}
+
+/**
+ * Generate a query for high DPI screens
+ *
+ * ## Example:
+ *
+ *      +screen-high-DPI()
+ *        .high-DPI
+ *          color green
+ *
+ * @return {Block}
+ * @see --media-queries--calculate
+ * @type {Mixin}
+ * @api public
+ */
+
+screen-high-DPI()
+  conditions = ()
+  all-conditions = ''
+  for prefix in '-webkit-min-' 'min--moz-' 'min-'
+    condition = 'only screen and (%sdevice-pixel-ratio: 2)' % prefix
+    push(conditions, condition)
+  all-conditions = join(', ', conditions)
+  @media all-conditions
+    {block}

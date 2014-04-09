@@ -1,0 +1,210 @@
+<!DOCTYPE html><html><head><link rel="stylesheet" href="http://learnboost.github.io/stylus/s/try.css"><link rel="stylesheet" href="http://learnboost.github.io/stylus/s/codemirror.css"><style>html {
+  font-family: Helvetica;
+  padding: 50px;
+}
+h1,
+h2,
+h3,
+h4 {
+  font-weight: normal;
+}
+pre {
+  padding: 25px;
+}
+section {
+  padding-left: 50px;
+  padding-bottom: 50px;
+}
+</style></head></html><body><script src="http://learnboost.github.io/stylus/try/jquery.js"></script><script src="http://learnboost.github.io/stylus/try/stylus.min.js"></script><h2>variables</h2><section id="try"><h3>version = 0.0.3'</h3><p>Library version.</p><h3>sizes = {}</h3><p>Create hash to contain sizes.</p><h3>devices = palm' 'phone' 'tablet' 'laptop' 'desktop' 'large-desktop'</h3><p>Define default devices.</p><h3>unit = 240</h3><p>Define default unit of measurement for `sizes`.</p></section><h3>screen-size-above : size</h3><p>Generate a query for screens above a given `size`.</p><h3>screen-size-below : size</h3><p>Generate a query for screens below a given `size`.</p><h3>screen-size : size</h3><p>Generate a query for screens that match a given `size`.</p><h3>screen-orientation : orientation</h3><p>Generate a query for screens that match a given `orientation`.</p><pre class="hidden">
++screen-size-above('tablet')
+  .above-keyword
+    color green
+
++screen-size-above(500px)
+  .above-size
+    color green
+,
++screen-size-below('large-desktop')
+  .below-keyword
+    color green
+
++screen-size-below(1000px)
+  .below-size
+    color green
+,
++screen-size('palm')
+  .palm
+    color green
+
++screen-size('tablet')
+  .tablet
+    color green
+
++screen-size('laptop')
+  .laptop
+    color green
+
++screen-size('desktop')
+  .desktop
+    color green
+
++screen-size('desktop')
+  .desktop
+    color green
+
++screen-size('large-desktop')
+  .large-desktop
+    color green
+,
++screen-orientation('portrait')
+  .orientationPortrait
+    color green
+
++screen-orientation('landscape')
+  .orientationLandscape
+    color green
+</pre><textarea class="stylus"></textarea><textarea class="css"></textarea><pre class="hidden">
++screen-size-above('tablet')
+  .above-keyword
+    color green
+
++screen-size-above(500px)
+  .above-size
+    color green
+,
++screen-size-below('large-desktop')
+  .below-keyword
+    color green
+
++screen-size-below(1000px)
+  .below-size
+    color green
+,
++screen-size('palm')
+  .palm
+    color green
+
++screen-size('tablet')
+  .tablet
+    color green
+
++screen-size('laptop')
+  .laptop
+    color green
+
++screen-size('desktop')
+  .desktop
+    color green
+
++screen-size('desktop')
+  .desktop
+    color green
+
++screen-size('large-desktop')
+  .large-desktop
+    color green
+,
++screen-orientation('portrait')
+  .orientationPortrait
+    color green
+
++screen-orientation('landscape')
+  .orientationLandscape
+    color green
+</pre><textarea class="stylus"></textarea><textarea class="css"></textarea><pre class="hidden">
++screen-size-above('tablet')
+  .above-keyword
+    color green
+
++screen-size-above(500px)
+  .above-size
+    color green
+,
++screen-size-below('large-desktop')
+  .below-keyword
+    color green
+
++screen-size-below(1000px)
+  .below-size
+    color green
+,
++screen-size('palm')
+  .palm
+    color green
+
++screen-size('tablet')
+  .tablet
+    color green
+
++screen-size('laptop')
+  .laptop
+    color green
+
++screen-size('desktop')
+  .desktop
+    color green
+
++screen-size('desktop')
+  .desktop
+    color green
+
++screen-size('large-desktop')
+  .large-desktop
+    color green
+,
++screen-orientation('portrait')
+  .orientationPortrait
+    color green
+
++screen-orientation('landscape')
+  .orientationLandscape
+    color green
+</pre><textarea class="stylus"></textarea><textarea class="css"></textarea><pre class="hidden">
++screen-size-above('tablet')
+  .above-keyword
+    color green
+
++screen-size-above(500px)
+  .above-size
+    color green
+,
++screen-size-below('large-desktop')
+  .below-keyword
+    color green
+
++screen-size-below(1000px)
+  .below-size
+    color green
+,
++screen-size('palm')
+  .palm
+    color green
+
++screen-size('tablet')
+  .tablet
+    color green
+
++screen-size('laptop')
+  .laptop
+    color green
+
++screen-size('desktop')
+  .desktop
+    color green
+
++screen-size('desktop')
+  .desktop
+    color green
+
++screen-size('large-desktop')
+  .large-desktop
+    color green
+,
++screen-orientation('portrait')
+  .orientationPortrait
+    color green
+
++screen-orientation('landscape')
+  .orientationLandscape
+    color green
+</pre><textarea class="stylus"></textarea><textarea class="css"></textarea><script src="http://learnboost.github.io/stylus/try/codemirror.js"></script><script src="http://learnboost.github.io/stylus/try/css-mode.js"></script><script src="./try.js"></script></body>

@@ -1,0 +1,60 @@
+#!/usr/bin/env node
+
+var program = require('commander');
+var lib = require('..');
+var read = require('fs').readFileSync;
+var fs = require('fs');
+var jade = require('jade').renderFile.bind(null, __dirname + '/../lib/index.jade');
+
+// cli
+program
+  .version(require('../package.json').version)
+  .option('-o, --out [path]', 'optional path to write')
+
+program.parse(process.argv);
+
+var arg = program.args[0];
+
+var raw = read(arg, 'utf8');
+
+var parsed = lib.parseComments(raw);
+
+var public = parsed.filter(function(p){ return p })
+var exvars = public.filter(function(p){ return p.ctx && p.ctx.type === 'exposed variable'});
+var exvarsCode = exvars.map(function(exv){ return {name: exv.ctx.receiver, value: exv.ctx.value, examples: [
+  {
+   stylus: 'h1\n\tbackground ' + exv.ctx.receiver,
+   markup: 'h1 ' + exv.ctx.name
+  }
+]}});
+
+var fns = public.filter(function(p){ return p.ctx && p.ctx.type === 'exposed function'});
+var fnsCode = fns.map(function(f){ return {name: f.ctx.receiver, value: f.ctx.value, examples: [
+  {
+   stylus: 'h1\n  +' + f.ctx.receiver + '(\'desktop\')\n    background-color green',
+   markup: 'h1 ' + f.ctx.name
+  }
+]}});
+
+var locals = {
+  preload: raw,
+  sections: [
+    {
+      name: 'variables',
+      defs: exvarsCode
+    },
+    {
+      name: 'functions',
+      defs: fnsCode
+    }
+  ]
+};
+
+var data = jade({globals: locals});
+
+write(data);
+
+function write(data) {
+  if (!program.out) return process.stdout.write(data);
+  fs.writeFileSync(program.out || 'styleguide.html', data);
+}

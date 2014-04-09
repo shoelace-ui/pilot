@@ -1,0 +1,67 @@
+doctype html
+html
+  head
+    link(rel="stylesheet", href="http://learnboost.github.io/stylus/s/try.css")
+    link(rel="stylesheet", href="http://learnboost.github.io/stylus/s/codemirror.css")
+    style
+      :stylus
+        html
+          font-family Helvetica
+          padding 50px
+        h1,h2,h3,h4
+          font-weight normal
+        pre
+          padding 25px
+        section
+          padding-left 50px
+          padding-bottom 50px
+body
+  script(src="http://learnboost.github.io/stylus/try/jquery.js")
+  script(src="http://learnboost.github.io/stylus/try/stylus.min.js")
+
+  - var variables = []
+  - var functions = []
+  - var publics = []
+
+  for l in locals
+
+    - if (l.ctx && l.ctx.type === "exposed variable") {
+    -   variables.push(l)
+    - }
+    - if (l.ctx && l.ctx.type === "exposed function") {
+    -   functions.push(l)
+    - }
+
+  h2 variables
+  section#try
+    for v in variables
+      h3!= v.ctx.receiver + ' = ' + v.ctx.value
+      p!= v.description.full
+
+
+  - var code = [];
+  for f in functions
+    h3!= f.ctx.receiver + ' : ' + f.ctx.name
+    p!= f.description.summary
+    - var body = f.description.body;
+    - if (~body.indexOf('Example')) {
+    -   body = body.split('\n').slice(1).map(function(b){return b.replace(/^    /, '')}).join('\n');
+    -   code.push(body);
+    - }
+
+  for f in functions
+    if f.tags
+      for t in f.tags
+        - if (t.visibility === 'public') {
+        -   publics.push(f)
+        pre.hidden(class= ii)= code
+        textarea.stylus= body
+        textarea.css
+        - }
+
+
+
+
+  script(src="http://learnboost.github.io/stylus/try/codemirror.js")
+  script(src="http://learnboost.github.io/stylus/try/css-mode.js")
+  script(src="./try.js")

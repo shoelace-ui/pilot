@@ -14,7 +14,8 @@
     "styles"
   ],
   "bin": {
-    "pilot": "./bin/pilot"
+    "pilot": "./bin/pilot",
+    "pilot-render": "./bin/pilot-render"
   },
   "dependencies": {
     "github-flavored-markdown": ">= 0.0.1",

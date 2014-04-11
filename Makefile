@@ -1,7 +1,4 @@
 
-TESTS = test/*.test.js
-REPORTER = dot
-
 build:
 	@component build
 
@@ -9,9 +6,7 @@ test:
 	@NODE_ENV=test ./node_modules/.bin/mocha \
 		--ui exports \
 		--watch \
-		--bail \
-		--reporter $(REPORTER) \
-		$(TESTS)
+		--bail
 
 docs:
 	@./bin/pilot \

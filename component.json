@@ -8,9 +8,5 @@
     "camshaft/codedoc": "*"
   },
   "development": {},
-  "license": "MIT",
-  "main": "lib/client.js",
-  "scripts": [
-    "lib/client.js"
-  ]
+  "license": "MIT"
 }

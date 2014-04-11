@@ -3,7 +3,7 @@ html
   head
     style
       :stylus
-        @import './index.styl'
+        @import '../stylesheets/index.styl'
 
     script(src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.min.js")
     script(src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.1.3/ace.js")
@@ -18,8 +18,8 @@ html
     main(data-preload="#{globals.preload}")#main
 
       script
-        include ../build/build.js
-        include ./render.js
+        include ../../build/build.js
+        include ../render.js
 
       section
         h1= globals.pkg.name

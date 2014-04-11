@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 
 var fs = require('fs');
-var program = require('commander');
-var jade = require('jade').renderFile.bind(null, __dirname + '/../lib/index.jade');
-var markdown = require('github-flavored-markdown').parse;
 var pkg = require(process.cwd() + '/package.json');
+var program = require('commander');
+var jade = require('jade').renderFile.bind(null, __dirname + '/../lib/templates/index.jade');
+var markdown = require('github-flavored-markdown').parse;
 
 var lib = require('..');
 
@@ -18,7 +18,8 @@ var arg = program.args[0];
 
 var raw = fs.readFileSync(arg, 'utf8');
 var parsed = lib.parseComments(raw, {raw: true});
-var public = parsed.filter(function(p){ return p })
+var public = parsed;
+// var public = parsed.filter(function(p){ return p })
 
 var vars = public
   .filter(function(p){ return p.ctx && p.ctx.type === 'public variable'})

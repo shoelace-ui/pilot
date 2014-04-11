@@ -1,2 +1,2 @@
 
-module.exports = require('./lib/pilot');
+module.exports = require('./lib');

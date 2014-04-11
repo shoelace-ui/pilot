@@ -1,24 +1,18 @@
 
 build:
-	@component build
+	component build
 
 test:
-	@NODE_ENV=test ./node_modules/.bin/mocha \
-		--ui exports \
+	@./node_modules/.bin/mocha \
 		--watch \
 		--bail
 
-docs:
-	@./bin/pilot \
-	  --verbose \
-	  lib/* \
-	  --out docs \
-	  --title pilot \
-	  --github visionmedia/pilot \
-	  --index index.md
+lr:
+	@lr \
+	  'bin':'@touch test/index.js' \
+	  'lib':'@touch test/index.js' \
+	  'test/**.jade':'@touch test/index.js'
+	  'test/**.styl':'@touch test/index.js'
+	  'test/**.html':''
 
-doc-server:
-	@./bin/pilot \
-		--server docs
-
-.PHONY: test docs build
+.PHONY: test docs build lr

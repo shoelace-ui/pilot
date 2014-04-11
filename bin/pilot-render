@@ -17,7 +17,7 @@ program
 var arg = program.args[0];
 
 var raw = fs.readFileSync(arg, 'utf8');
-var parsed = lib.parseComments(raw, {raw: true});
+var parsed = lib(raw, {raw: true});
 var public = parsed;
 // var public = parsed.filter(function(p){ return p })
 
